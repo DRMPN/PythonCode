@@ -1,20 +1,28 @@
 import logging
 # Import the command handler
 import lightbulb
+# Import slash commands submodule 
+from lightbulb import slash_commands
 import os
 
 
 # Create instance of a bot and set to debug for both lightbulb and hikari
-# TODO: change placeholder to os usage
-bot = lightbulb.Bot(token="<placeholder>", prefix="<placeholder>", logs="DEBUG")
+# TODO: add more parameters
+bot = lightbulb.Bot(token=os.environ.get("DISCORD_BOT_TOKEN"), prefix="DisBot", logs="DEBUG")
 
 
 # Silly bot command definition 
-# TODO: redo this with slash commands
-@bot.command()
-async def ping(ctx):
-    # Send a message to the channel the command was used in
-    await ctx.respond("Pong!")
+class Echo(slash_commands.SlashCommand):
+    description = "Repeats your input."
+    # Options
+    text: str = slash_commands.Option("Text to repeat")
+
+    async def callback(self, context):
+        await context.respond(context.options.text)
+
+
+# Add the slash command to the bot
+bot.add_slash_command(Echo)
 
 
 # Run the bot
