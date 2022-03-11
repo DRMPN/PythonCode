@@ -4,8 +4,6 @@
 
 def queue_time(customers, n):
     
-    ans = []
-    
     if n == 1:
         return sum(customers)
     else:
@@ -13,23 +11,15 @@ def queue_time(customers, n):
         
         for i in range(n):
             try:
-                till.append((customers.pop(0), 0))
+                till.append(customers.pop(0))
             except IndexError:
-                break  
+                pass
                 
-        while till:
-            tmp = []
-            for (c, t) in till:
-                if c > 0:
-                    c -= 1
-                    t += 1
-                    tmp.append((c, t))
-                else:
-                    try:
-                        tmp.append((customers.pop(0), t))
-                    except IndexError:
-                        ans.append((c,t))
-                till = tmp
+        while customers:
+            ind = till.index(min(till))
+            try:
+                till[ind] += customers.pop(0)
+            except IndexError:
+                pass
                 
-        _, time = max(ans)
-    return time
+    return max(till)
